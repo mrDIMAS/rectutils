@@ -6,7 +6,6 @@ edition = "2021"
 license = "MIT"
 description = "Common algorithms for rectangles (quadtree, rect packing, etc.)"
 keywords = ["quadtree", "rectpack"]
-categories = ["game-development", "graphics"]
 include = ["/src/**/*", "/Cargo.toml", "/LICENSE", "/README.md"]
 documentation = "https://docs.rs/rectutils"
 repository = "https://github.com/mrDIMAS/rectutils"
