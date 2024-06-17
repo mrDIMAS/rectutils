@@ -245,7 +245,7 @@ impl<I, const CAP: usize> QueryStorage for ArrayVec<I, CAP> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::math::Rect;
+    use crate::Rect;
 
     struct TestObject {
         bounds: Rect<f32>,
