@@ -4,7 +4,8 @@ use crate::Rect;
 use arrayvec::ArrayVec;
 use nalgebra::Vector2;
 
-enum QuadTreeNode<T> {
+#[derive(Clone)]
+enum QuadTreeNode<T: Clone> {
     Leaf {
         bounds: Rect<f32>,
         ids: Vec<T>,
@@ -38,13 +39,14 @@ fn split_rect(rect: &Rect<f32>) -> [Rect<f32>; 4] {
 }
 
 /// Quadrilateral (quad) tree is used for space partitioning and fast spatial queries.
-pub struct QuadTree<T> {
+#[derive(Clone)]
+pub struct QuadTree<T: Clone> {
     nodes: Vec<QuadTreeNode<T>>,
     root: usize,
     split_threshold: usize,
 }
 
-impl<T: 'static> Default for QuadTree<T> {
+impl<T: Clone + 'static> Default for QuadTree<T> {
     fn default() -> Self {
         Self {
             nodes: Default::default(),
