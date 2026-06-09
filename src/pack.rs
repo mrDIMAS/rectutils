@@ -3,7 +3,7 @@
 use crate::{Number, Rect};
 use num_traits::Zero;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 struct RectPackNode<T>
 where
     T: Number,
@@ -31,7 +31,7 @@ where
 }
 
 /// Rectangle packer packs small rectangles into a bigger one.
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub struct RectPacker<T>
 where
     T: Number,

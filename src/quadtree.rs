@@ -4,8 +4,13 @@ use crate::Rect;
 use arrayvec::ArrayVec;
 use nalgebra::Vector2;
 
-#[derive(Clone)]
-enum QuadTreeNode<T: Clone> {
+/// A trait, that must be implemented by a type that is suitable as a node id.
+pub trait NodeId: Clone + PartialEq + 'static {}
+
+impl<T> NodeId for T where T: Clone + PartialEq + 'static {}
+
+#[derive(Clone, PartialEq)]
+enum QuadTreeNode<T: NodeId> {
     Leaf {
         bounds: Rect<f32>,
         ids: Vec<T>,
@@ -39,14 +44,14 @@ fn split_rect(rect: &Rect<f32>) -> [Rect<f32>; 4] {
 }
 
 /// Quadrilateral (quad) tree is used for space partitioning and fast spatial queries.
-#[derive(Clone)]
-pub struct QuadTree<T: Clone> {
+#[derive(Clone, PartialEq)]
+pub struct QuadTree<T: NodeId> {
     nodes: Vec<QuadTreeNode<T>>,
     root: usize,
     split_threshold: usize,
 }
 
-impl<T: Clone + 'static> Default for QuadTree<T> {
+impl<T: NodeId> Default for QuadTree<T> {
     fn default() -> Self {
         Self {
             nodes: Default::default(),
@@ -75,8 +80,8 @@ pub enum QuadTreeBuildError {
     ReachedRecursionLimit,
 }
 
-#[derive(Clone)]
-struct Entry<I: Clone> {
+#[derive(Clone, PartialEq)]
+struct Entry<I: NodeId> {
     id: I,
     bounds: Rect<f32>,
 }
@@ -89,7 +94,7 @@ fn build_recursive<I>(
     depth: usize,
 ) -> Result<usize, QuadTreeBuildError>
 where
-    I: Clone + 'static,
+    I: NodeId,
 {
     if depth >= 64 {
         Err(QuadTreeBuildError::ReachedRecursionLimit)
@@ -133,7 +138,7 @@ where
 
 impl<I> QuadTree<I>
 where
-    I: Clone + 'static,
+    I: NodeId,
 {
     /// Creates new quad tree from the given initial bounds and the set of objects.
     pub fn new<T>(
